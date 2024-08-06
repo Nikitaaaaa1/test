@@ -4,20 +4,20 @@ import { FC } from "react"
 interface Props {
     state?: number | null,
     setState: (value: number) => void,
-    placeholder?: string,
+    label?: string,
     data: Map<string, string>,
     showHelper: boolean,
     helperText:string
 }
 
-const Dropdown: FC<Props> = ({state, setState, placeholder, data, showHelper=false, helperText=""}) => {
+const Dropdown: FC<Props> = ({state, setState, label, data, showHelper=false, helperText=""}) => {
     return (
         <FormControl>
-            <InputLabel id="select-label">{placeholder}</InputLabel>
+            <InputLabel id="select-label">{label}</InputLabel>
             <Select
                 sx={{ width: '30vw' }} 
                 labelId="select-label"
-                label={placeholder}
+                label={label}
                 type="select"
                 id="dropdown"
                 value={state}

@@ -194,7 +194,9 @@ function App() {
             <InputComponent
               setState={handleChangeName}
               state={data?.Name || ""}
+              label="Imię"
               placeholder='Wpisz imię...'
+              helperText='Te pole jest wymagane'
               isValid={isValidName}
             />
           </FormControl>
@@ -202,6 +204,7 @@ function App() {
             <InputComponent
               setState={handleChangeSurname}
               state={data?.Surname || ""}
+              label="Nazwisko"
               placeholder='Wpisz nazwisko...'
             />
           </FormControl>
@@ -218,9 +221,9 @@ function App() {
               setState={handleChangeContinentId}
               state={data?.ContinentId || 0}
               data={new Map(continents.map(i => [i.ContinentId, i.Name]))}
-              placeholder='Wybierz kontynent'
+              label='Kontynent'
               showHelper={showUnderSelectCommunicat}
-              helperText='"Nie spełnione kryteria'
+              helperText='Nie spełnione kryteria'
             />
           )}
           <Button
