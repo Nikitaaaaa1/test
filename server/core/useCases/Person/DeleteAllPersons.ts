@@ -1,5 +1,7 @@
 import getDBConnection from "../../../repository/database/getDBConnection"
-export default async function DeleteAllPersons(): Promise<null> {
-    const db = getDBConnection("sqlite")
+import I_Person from "../../../repository/database/Interfaces/I_Person";
+
+
+export default async function DeleteAllPersons(db: I_Person): Promise<null> {
     return db.deleteAllPersons()
 }

@@ -1,25 +1,19 @@
 import {useEffect, useState } from 'react'
-import {FormControl, Box, Button, Typography } from '@mui/material'
+import { Box, Button, Snackbar, SnackbarCloseReason } from '@mui/material'
 import './App.css'
 import {createTheme, ThemeOptions, ThemeProvider } from "@mui/material/styles"
-import InputComponent from './components/input'
-import PersonTable from './components/table'
-import Dropdown from './components/dorpdown'
-import Continent from './types/Country'
-import getContinents from './getters/getContinents'
+import PersonTable from './views/PersonTable'
+import Continent from './core/types/T_Country'
+import getContinents from './core/UseCases/getContinents'
 import moment from 'moment'
-import addPerson from './useCases/addPerson'
-import getPersons from './getters/getPersons'
-import Person from './types/Person'
-import deleteAllPersons from './useCases/deletePersons'
-import deletePersonByPk from './useCases/deletePersonByPk'
+import getPersons from './core/UseCases/getPersons'
+import Person from './core/Person'
+import deleteAllPersons from './core/UseCases/deletePersons'
+import T_NewPerson from './core/types/T_NewPerson'
+import NewUser from './views/NewUser'
+import postUser from './core/UseCases/postPerson'
 
-type newPerson = {
-  Name: string,
-  Surname?: string,
-  DateOfBirthd: string,
-  ContinentId: number,
-}
+
 
 interface theme extends ThemeOptions {
   typography: {
@@ -42,10 +36,12 @@ function App() {
   const [theme, setTheme] = useState<theme>(defaultTheme)
   const [europeId, setEuropeId] = useState<number | null>(0)
   const [showUnderSelectCommunicat, setShowUnderSelectCommunicat] = useState<boolean>(false)
-  const [persons, setPersons] = useState<Person[] | null>(null)
+  const [hideUnderInputNameCommunicat, setShowUnderInputNameCommunicat] = useState<boolean>(true)
+  const [persons, setPersons] = useState<Person[] | null>([])
   const [enableToSave, setEnableToSave] = useState<boolean>(false)
   const [chosedItem, setChosedItem] = useState<number | null>(null)
-  const [data, setData] = useState<newPerson>( {
+  const [open, setOpen] = useState(false);
+  const [data, setData] = useState<T_NewPerson>( {
     Name: "",
     Surname: "",
     DateOfBirthd: "",
@@ -53,102 +49,71 @@ function App() {
   })
 
   useEffect(() => {
-    !isValidName 
-    || showUnderSelectCommunicat
-    || !moment(data.DateOfBirthd).isValid()
-    || !data.ContinentId
-    || Number(moment.duration(moment().diff(moment(data.DateOfBirthd)))) < 0
+    (Number(moment.duration(moment().diff(moment(data?.DateOfBirthd)))) < 0)
     ? setEnableToSave(false)
     : setEnableToSave(true)
-  }, [data, isValidName, showUnderSelectCommunicat])
+  }, [data.Name])
 
   const deleteAll = () => {
     deleteAllPersons()
     .then(() => {
       return getPersons()
-      .then(p => setPersons(p))
+      .then(p => setPersons(p.map(i => new Person(i))))
       .catch(e => console.log(e)) 
     })
     .catch(e => console.log(e))
   }
-  const deleteByPK = (id: number) => {
-    deletePersonByPk(id)
+  const deleteByPK = (i: Person) => {
+    i.delete()
     .then(() => {
       return getPersons()
-      .then(p => setPersons(p))
+      .then(p => setPersons(p.map(i => new Person(i))))
       .catch(e => console.log(e)) 
     })
     .catch(e => console.log(e))
+  }
+
+  const handleCloseAlert = (
+    event: React.SyntheticEvent | Event,
+    reason?: SnackbarCloseReason,
+  ) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
+
+
+  const changeTheme = () => {
+    const m = moment(data.DateOfBirthd) 
+    if (m.isValid() && moment.duration(moment().diff(m)).asYears() > 60 ) {
+      setTheme(defaultTheme2)
+    } 
+    else {
+      if (theme.typography.fontSize !== 14) {
+        setTheme(defaultTheme)
+      }
+    }
   }
 
   const handleChangeChoice = (id: number) => {
     if (chosedItem === id) return setChosedItem(null)  
     setChosedItem(id)
   }
-  const postUser = () => {
-    addPerson(data.Name,
-      data.Surname,
-      data.ContinentId,
-      data.DateOfBirthd)
-    .then(added => {
-      if (!added) {
-        window.alert("porazka")
-        return
-      }
-      window.alert("sukces")
-      const m = moment(data.DateOfBirthd) 
-      if (m.isValid() && moment.duration(moment().diff(m)).asYears() > 60 ) {
-        setTheme(defaultTheme2)
-      } 
-      else {
-        if (theme.typography.fontSize !== 14) {
-          setTheme(defaultTheme)
-        }
-      }
-      setData({
-        Name: "",
-        Surname: "",
-        DateOfBirthd: "",
-        ContinentId: 0,
-      })
-      return getPersons()
-      .then(p => setPersons(p))
-      .catch(e => console.log(e)) 
-    })
-    .catch(e => console.log(e))
+  const handleSubmit = () => {
+    postUser(
+      data,
+      setData,
+      setPersons,
+      changeTheme,
+      europeId,
+      setShowUnderInputNameCommunicat
+    )
+    setOpen(true)
   }
 
 
 
-  const handleChangeName = (evt: string) => {
-    if(evt.length > 100) return
-    setData(prev => ({
-      ...prev,
-      Name: evt,
-    }));
-  };
-  
-  const handleChangeSurname = (evt: string) => {
-    if(evt.length > 100) return
-    setData(prev => ({
-      ...prev,
-      Surname:  evt,
-    }));
-  };
-  
-  const handleChangeDateOfBirth = (evt: string) => {
-    setData(prev => ({
-      ...prev,
-      DateOfBirthd: evt,
-    }));
-  };
-  
-  const handleChangeContinentId = (evt: number) => {
-    setData(prev => ({
-      ...prev,
-      ContinentId: Number(evt)
-    }));
-  };
   
   useEffect(() => {setIsValidName(!!data.Name.length)}, [data.Name] )
   useEffect(() => {
@@ -160,12 +125,9 @@ function App() {
   }, [data])
   useEffect(() => {
       getPersons()
-      .then(p => setPersons(p))
+      .then(p => setPersons(p.map(i => new Person(i))))
       .catch(e => console.log(e)) 
   }, [])
-  useEffect(() => {
-
-  }, [data.DateOfBirthd] )
 
   useEffect(() => {
     getContinents().then(res => {
@@ -184,58 +146,16 @@ function App() {
       <ThemeProvider theme={theme}>
 
       <div className="border-solid border-2 rounded-sm	 border-cyan-600">
-        <Box>
-          <Typography variant="h6" align="left" m={2} >
-            Utwórz nowego użytkownika
-          </Typography>
-        </Box>
-        <Box display="flex" justifyContent="space-between" className="flex">
-          <FormControl fullWidth>
-            <InputComponent
-              setState={handleChangeName}
-              state={data?.Name || ""}
-              label="Imię"
-              placeholder='Wpisz imię...'
-              helperText='Te pole jest wymagane'
-              isValid={isValidName}
-            />
-          </FormControl>
-          <FormControl fullWidth>
-            <InputComponent
-              setState={handleChangeSurname}
-              state={data?.Surname || ""}
-              label="Nazwisko"
-              placeholder='Wpisz nazwisko...'
-            />
-          </FormControl>
-        </Box>
-        <Box display="flex" justifyContent="space-between" alignItems="center" className="flex" m={2}> 
-            <InputComponent
-              setState={handleChangeDateOfBirth}
-              state={data?.DateOfBirthd || ""}
-              placeholder='Wybierz datę urodzenia'
-              type="date"
-            />
-          {continents && (
-            <Dropdown
-              setState={handleChangeContinentId}
-              state={data?.ContinentId || 0}
-              data={new Map(continents.map(i => [i.ContinentId, i.Name]))}
-              label='Kontynent'
-              showHelper={showUnderSelectCommunicat}
-              helperText='Nie spełnione kryteria'
-            />
-          )}
-          <Button
-            variant="contained"
-            color="info"
-            size="large"
-            disabled={!enableToSave}
-            onClick={postUser}
-          >
-            Wyślij
-          </Button>
-        </Box>
+        <NewUser
+          data={data}
+          setData={setData}
+          continents={continents}
+          enableToSave={enableToSave}
+          postUser={handleSubmit}
+          isValidName={isValidName}
+          showUnderSelectCommunicat={showUnderSelectCommunicat}
+          hideUnderInputNameCommunicat={hideUnderInputNameCommunicat}
+        />
       </div>
 
         <Box display="flex" justifyContent="space-between" alignItems="center" className="flex" m={2}> 
@@ -252,9 +172,16 @@ function App() {
         persons={persons}
         setChosedItem={handleChangeChoice}
         chosedItem={chosedItem}
-        deleteFunction={deleteByPK}
+        deleteByPK={deleteByPK}
       />
     </div>
+
+    <Snackbar
+        open={open}
+        autoHideDuration={3000}
+        onClose={handleCloseAlert}
+        message="Sukces"
+      />
     </ThemeProvider>
     </>
   )

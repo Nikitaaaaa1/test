@@ -1,5 +1,5 @@
-import I_Continent from "../../../interfaces/repositories/database/continent";
-import Continent from "../../entity/continent/continent";
+import I_Continent from "../../../repository/database/Interfaces/I_Continent";
+import Continent from "../../entity/Continent/continent";
 
 export default async function GetContinents(db: I_Continent): Promise<any[]> {
     return db.getContinents()

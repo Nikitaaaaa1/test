@@ -1,10 +1,8 @@
-import I_Person from "../../../interfaces/repositories/database/person";
-import getDBConnection from "../../../repository/database/getDBConnection";
-import Person from "../../entity/person/person";
+import I_Person from "../../../repository/database/Interfaces/I_Person";
+import Person from "../../entity/Person/person";
 import moment from "moment";
 
-export default async function GetPersons(): Promise<any[]> {
-    const db = getDBConnection("sqlite")
+export default async function GetPersons(db: I_Person): Promise<any[]> {
     return db
     .getPersons()
     .then(rows => {
@@ -13,10 +11,10 @@ export default async function GetPersons(): Promise<any[]> {
             return new Person(
                 row?.Name,
                 row?.Surname,
-                row?.DateOfBirthd ? moment(row.DateOfBirthd) : moment(Date.now().toString()),
-                row?.ContinentId,
+                row?.DateOfBirthd && moment(row.DateOfBirthd, "YYYY-MM-DD HH:mm:ss"),
+                row?.ContinentId ? row?.ContinentId : undefined,
                 row?.PersonId,
-                row?.continent.Name
+                row?.continent ? row?.continent.Name : ""
             ).get()
         })
     })

@@ -1,16 +1,16 @@
 import moment from "moment"
-import { Hash, PersonId } from "../../../interfaces/repositories/database/person"
+import { Hash, PersonId } from "../../../repository/database/Interfaces/I_Person"
 
 
 export default class Person{
     private Name?: string = ""
     private Surname?: string = ""
-    private DateOfBirthd?: moment.Moment 
-    private ContinentId?: number
+    private DateOfBirthd?: moment.Moment | null
+    private ContinentId?: number | null
     private id?: PersonId
     private hash?: Hash = ""
     private ContinentName?: string = ""
-    constructor(name?: string, surname?: string, dateOfBirthd?: moment.Moment, continentId?: number, id?: PersonId, continentName?: string){
+    constructor(name?: string, surname?: string, dateOfBirthd?: moment.Moment, continentId?: number | null, id?: PersonId, continentName?: string){
         this.Name = name
         this.Surname = surname
         this.DateOfBirthd = dateOfBirthd
@@ -39,15 +39,18 @@ export default class Person{
 
     get name(): string | undefined {return this.Name}
     get surname(): string | undefined {return this.Surname}
-    get dateOfBirthd(): moment.Moment | undefined {return this.DateOfBirthd}
-    get continentId(): number | undefined {return this.ContinentId}
+    get dateOfBirthd(): moment.Moment | undefined | null {return this.DateOfBirthd}
+    get continentId(): number | undefined | null {return this.ContinentId}
     get getId(): PersonId | undefined {return this.id}
     get getHash(): Hash  | undefined {return this.hash}
     get() {
+        const DoB = moment(this.DateOfBirthd).isValid() 
+        ? moment(this.DateOfBirthd).format("DD/MM/YYYY")
+        : ""
         return {
             Name: this.Name,
             Surname: this.Surname,
-            DateOfBirthd: moment(this.DateOfBirthd).format("DD/MM/YYYY"),
+            DateOfBirthd: DoB,
             id: this.id,
             ContinentId: this.ContinentId,
             ContinentName: this.ContinentName

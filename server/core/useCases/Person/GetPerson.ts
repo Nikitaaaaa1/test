@@ -1,17 +1,15 @@
-import I_Person from "../../../interfaces/repositories/database/person";
-import Person from "../../entity/person/person";
+import I_Person from "../../../repository/database/Interfaces/I_Person";
+import Person from "../../entity/Person/person";
 import moment from "moment";
-import getDBConnection from "../../../repository/database/getDBConnection";
 
-export default async function GetPerson(personId: number): Promise<any> {
-    const db = getDBConnection("sqlite")
+export default async function GetPerson(personId: number, db: I_Person): Promise<any> {
     if (!personId) throw Error("undefined userId") 
     return db.getPerson(personId).then(rows => {
         return new Person(
             rows?.Name,
             rows?.Surname,
-            moment(rows?.DateOfBirthd),
-            rows?.ContinentId,
+            rows?.DateOfBirthd && moment(rows?.DateOfBirthd, "YYYY-MM-DD HH:mm:ss"),
+            rows?.ContinentId ? rows?.ContinentId : undefined,
             rows?.PersonId
         ).get()
     })

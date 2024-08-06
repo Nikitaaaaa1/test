@@ -10,9 +10,10 @@ interface Props {
     isValid?: boolean,
     type?: "string" | "date",
     helperText?: string
+    showHelperText?: boolean
 }
 
-const InputComponent: FC<Props> = ({ state, setState, placeholder="", isValid=true, type="string", label="", helperText }) => {
+const InputComponent: FC<Props> = ({ state, setState, placeholder="", isValid=true, type="string", label="", helperText, showHelperText }) => {
 
     return (
         <FormControl>
@@ -31,7 +32,8 @@ const InputComponent: FC<Props> = ({ state, setState, placeholder="", isValid=tr
                 error={!isValid}
                 maxRows={100}
             />
-            {!isValid && helperText && <FormHelperText>{helperText}</FormHelperText>}
+            
+            {!showHelperText && helperText && <FormHelperText>{helperText}</FormHelperText>}
         </FormControl>
     );
 };

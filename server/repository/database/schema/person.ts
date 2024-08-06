@@ -1,15 +1,18 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../sequelize";
-import Continent from "./Continent"; 
+import Continent from "./continent"; 
+import { CreatedAt, UpdatedAt } from "sequelize-typescript";
 
 class Person extends Model {
     public PersonId!: number;
     public Surname!: string;
     public Name!: string;
     public DateOfBirthd!: Date;
-    public ContinentId!: number;
-    public continent!: Continent
+    public ContinentId!: number | null;
+    public continent!: Continent | null
 }
+
+
 
 Person.init(
     {
@@ -24,19 +27,21 @@ Person.init(
         },
         Surname: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         DateOfBirthd: {
             type: DataTypes.DATE,
-            allowNull: false,
+            allowNull: true,
         },
         ContinentId: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: true,
             references: {
                 model: Continent,
                 key: 'ContinentId'
-            }
+            },
+            onUpdate: 'CASCADE',
+            onDelete: 'SET NULL'
         }
     },
     {
@@ -48,7 +53,11 @@ Person.init(
 
 Person.belongsTo(Continent, {
     foreignKey: 'ContinentId',
-    as: 'continent'
+    as: 'continent',
+    targetKey: 'ContinentId',
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
 });
+
 
 export default Person;

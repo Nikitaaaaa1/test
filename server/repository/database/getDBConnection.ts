@@ -1,14 +1,13 @@
-import I_Continent from "../../interfaces/repositories/database/continent";
-import I_Person from "../../interfaces/repositories/database/person";
+import I_MergedInterface from "./Interfaces/I_MergedInterface";
 import sqlite from "./database";
 import DBType from "./types/T_DBType";
 
-interface MergedInterface extends I_Person, I_Continent {}
 
-export default function getDBConnection (database: DBType): MergedInterface {
+
+export default function getDBConnection (database: DBType): I_MergedInterface {
     switch (database) {
         case "postgres":
-            return connectPostrgres()
+            return new sqlite()
         case "sqlite":
             return connectSqlite()
     }
@@ -16,9 +15,9 @@ export default function getDBConnection (database: DBType): MergedInterface {
 
 
 
-function connectPostrgres(): MergedInterface {
+function connectPostrgres(): I_MergedInterface {
     return new sqlite()
 } 
-function connectSqlite(): MergedInterface {
+function connectSqlite(): I_MergedInterface {
     return new sqlite()
 } 

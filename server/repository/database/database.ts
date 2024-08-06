@@ -1,10 +1,8 @@
-import I_Person, { PersonId } from "../../interfaces/repositories/database/person";
-import Person from "../../core/entity/person/person";
-import PersonSchema from "./schema/Person";
-import ContinentSchema from './schema/Continent'
+import I_Person, { PersonId } from "./Interfaces/I_Person";
+import PersonSchema from "./schema/person";
+import ContinentSchema from './schema/continent'
 import moment from "moment";
-import I_Continent from "../../interfaces/repositories/database/continent";
-import Continent from "../../core/entity/continent/continent";
+import I_Continent from "./Interfaces/I_Continent";
 
 export default  class database implements I_Person, I_Continent {
     async deletePerson (personId: PersonId): Promise<boolean> {
@@ -44,11 +42,14 @@ export default  class database implements I_Person, I_Continent {
                 {
                     model: ContinentSchema,
                     as: 'continent',
-                    required: true
+                    required: false
                 }
+            ],
+            order: [
+                ['createdAt', 'DESC']
             ]
-        })
-        
+        },
+    )
     }
     async putPerson (
         name: string, 
