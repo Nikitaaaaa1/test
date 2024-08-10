@@ -2,7 +2,7 @@ import I_Person, { PersonId } from "./Interfaces/I_Person";
 import PersonSchema from "./schema/person";
 import ContinentSchema from './schema/continent'
 import moment from "moment";
-import I_Continent from "./Interfaces/I_Continent";
+import I_Continent from "./interfaces/I_Continent";
 
 export default  class database implements I_Person, I_Continent {
     async deletePerson (personId: PersonId): Promise<boolean> {
@@ -13,8 +13,8 @@ export default  class database implements I_Person, I_Continent {
         })
         .then(() => true )
     }
-    async deleteAllPersons (): Promise<null> {
-        return PersonSchema.truncate().then(() => null)
+    async deleteAllPersons (): Promise<boolean> {
+        return PersonSchema.truncate().then(() => true)
     }
     async addPerson (
         name: string, 

@@ -1,4 +1,4 @@
-import I_MergedInterface from "./Interfaces/I_MergedInterface";
+import I_MergedInterface from "./interfaces/I_MergedInterface";
 import sqlite from "./database";
 import DBType from "./types/T_DBType";
 

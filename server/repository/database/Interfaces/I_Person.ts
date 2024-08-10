@@ -5,7 +5,7 @@ export type Hash = string
 
 
 export default interface I_Person  {
-    deleteAllPersons(): Promise<null>
+    deleteAllPersons(): Promise<boolean>
     deletePerson (personId: PersonId): Promise<boolean>
     addPerson (name: string, surname: string, ContinentId: number | null | undefined, dateOfBirthd: moment.Moment | undefined): Promise<PersonSchema | null>
     getPerson (personId: number): Promise<PersonSchema | null>

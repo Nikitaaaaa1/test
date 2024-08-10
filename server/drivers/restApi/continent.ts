@@ -1,9 +1,6 @@
 import express, { Router } from "express"
-import getDBConnection from "../../repository/database/getDBConnection"
 import Continent from "../../core/controllers/restApi/continent"
-import DBType from "../../repository/database/types/T_DBType"
-import I_Continent_DB from "../../repository/database/Interfaces/I_Continent"
-import I_Continent from "../../core/controllers/restApi/interfaces/continent"
+import I_Continent_DB from "../../repository/database/interfaces/I_Continent"
 
 export default class Router_Continent {
     // private repo: I_Continent

@@ -1,4 +1,4 @@
-import Exeption from "./Exeption"
+import exeption from "./Exeption"
 import Fields from "./types/T_Fields"
 import Message from "./types/T_Message"
 
@@ -23,7 +23,7 @@ function returnTruelyFIeldsName<T> (keyArr: T, valueArr: boolean[]): string {
 }  
 
 
-class NoRequiredFieldProvided <T> extends Exeption{
+class NoRequiredFieldProvided <T> extends exeption{
     
     private fieldsName: Fields<T>[]
     private isFieldCompleted: boolean[]

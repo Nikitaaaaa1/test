@@ -1,6 +1,6 @@
 import { NextFunction,  Request, Response} from "express";
 import I_Continent from "./interfaces/continent";
-import I_Continent_DB from "../../../repository/database/Interfaces/I_Continent";
+import I_Continent_DB from "../../../repository/database/interfaces/I_Continent";
 
 
 export default class Continent implements I_Continent{

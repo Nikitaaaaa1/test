@@ -6,7 +6,6 @@ import DeletePerson from "../../useCases/Person/DeletePerson";
 import GetPersons from "../../useCases/Person/GetPersons";
 import GetPerson from "../../useCases/Person/GetPerson";
 import DeleteAllPersons from "../../useCases/Person/DeleteAllPersons";
-import getDBConnection from "../../../repository/database/getDBConnection";
 import I_Validator from "../../validation/I_Validator";
 
 interface PersonRequestBody {

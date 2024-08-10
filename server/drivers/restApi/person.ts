@@ -1,12 +1,10 @@
 import express, { Router } from "express"
 import Person from "../../core/controllers/restApi/person"
-import getDBConnection from "../../repository/database/getDBConnection"
 import I_Person_DB from "../../repository/database/Interfaces/I_Person"
 import I_Validator from "../../core/validation/I_Validator"
 
 export default class Router_Person {
 
-    // constructor (repo)
     public router: Router
     constructor (db: I_Person_DB, validator: I_Validator) {
         this.router = express.Router()

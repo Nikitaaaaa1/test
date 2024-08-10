@@ -1,6 +1,5 @@
-import { Request, Response, NextFunction } from "express";
 import GetContinents from "../useCases/Continent/GetContinents";
-import I_MergedInterface from "../../repository/database/Interfaces/I_MergedInterface";
+import I_MergedInterface from "../../repository/database/interfaces/I_MergedInterface";
 import moment from "moment";
 
 export default class Validator{
