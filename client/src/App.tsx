@@ -52,7 +52,7 @@ function App() {
     (Number(moment.duration(moment().diff(moment(data?.DateOfBirthd)))) < 0)
     ? setEnableToSave(false)
     : setEnableToSave(true)
-  }, [data.Name])
+  }, [data.DateOfBirthd])
 
   const deleteAll = () => {
     deleteAllPersons()
